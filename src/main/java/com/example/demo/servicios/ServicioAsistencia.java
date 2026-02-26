@@ -16,9 +16,6 @@ public class ServicioAsistencia {
         this.repository = repository;
     }
 
-    // ✅ REESCRITO: ya no llama a repository.crearAsistencia() (stored procedure)
-    //    Ahora usa repository.save() — igual que guardar() en ServicioProfesor,
-    //    ServicioCurso, ServicioReporte, etc.
     public Asistencia crear(Asistencia asistencia) {
         if (asistencia.getNombrePersona() == null || asistencia.getNombrePersona().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
@@ -30,19 +27,35 @@ public class ServicioAsistencia {
             throw new IllegalArgumentException("La hora de entrada es obligatoria");
         }
         if (asistencia.getAsistio() == null) {
-            asistencia.setAsistio(false); // valor por defecto si no se envía
+            asistencia.setAsistio(false);
         }
 
-        // save() crea un nuevo registro y retorna la entidad con el ID generado
+        // Defaults para nuevos campos
+        if (asistencia.getTieneExcusa() == null) {
+            asistencia.setTieneExcusa(false);
+        }
+
+        // Reglas de negocio
+        if (Boolean.TRUE.equals(asistencia.getAsistio())) {
+            asistencia.setTieneExcusa(false);
+            asistencia.setExcusa(null);
+        } else {
+            if (Boolean.TRUE.equals(asistencia.getTieneExcusa())) {
+                if (asistencia.getExcusa() == null || asistencia.getExcusa().isBlank()) {
+                    throw new IllegalArgumentException("Debe escribir la excusa cuando aplica");
+                }
+            } else {
+                asistencia.setExcusa(null);
+            }
+        }
+
         return repository.save(asistencia);
     }
 
-    // ✅ REESCRITO: usa findAll() en lugar del stored procedure listarAsistencias()
     public List<Asistencia> obtenerTodas() {
         return repository.findAll();
     }
 
-    // ✅ REESCRITO: usa findById() (retorna Optional) en lugar del stored procedure buscarPorId()
     public Asistencia obtenerPorId(Integer id) {
         Optional<Asistencia> resultado = repository.findById(id);
         if (resultado.isPresent()) {
