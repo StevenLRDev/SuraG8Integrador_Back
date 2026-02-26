@@ -4,11 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-// ✅ LIMPIADO: eliminadas las anotaciones @NamedStoredProcedureQueries y
-//    @NamedStoredProcedureQuery que referenciaban procedimientos almacenados
-//    inexistentes en H2. La entidad queda limpia igual que Profesor.java,
-//    Curso.java, Reporte.java, etc.
-
 @Entity
 @Table(name = "asistencia")
 public class Asistencia {
@@ -20,6 +15,12 @@ public class Asistencia {
     @Column(nullable = false)
     private String nombrePersona;
 
+    @Column
+    private String correoPersona;
+
+    @Column
+    private String tituloCurso;
+
     @Column(nullable = false)
     private LocalDate fecha;
 
@@ -28,6 +29,12 @@ public class Asistencia {
 
     @Column(nullable = false)
     private Boolean asistio;
+
+    @Column(nullable = false)
+    private Boolean tieneExcusa = false;
+
+    @Column(length = 500)
+    private String excusa;
 
     // Constructor vacío obligatorio para JPA
     public Asistencia() {}
@@ -39,6 +46,12 @@ public class Asistencia {
     public String getNombrePersona() { return nombrePersona; }
     public void setNombrePersona(String nombrePersona) { this.nombrePersona = nombrePersona; }
 
+    public String getCorreoPersona() { return correoPersona; }
+    public void setCorreoPersona(String correoPersona) { this.correoPersona = correoPersona; }
+
+    public String getTituloCurso() { return tituloCurso; }
+    public void setTituloCurso(String tituloCurso) { this.tituloCurso = tituloCurso; }
+
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
@@ -47,4 +60,10 @@ public class Asistencia {
 
     public Boolean getAsistio() { return asistio; }
     public void setAsistio(Boolean asistio) { this.asistio = asistio; }
+
+    public Boolean getTieneExcusa() { return tieneExcusa; }
+    public void setTieneExcusa(Boolean tieneExcusa) { this.tieneExcusa = tieneExcusa; }
+
+    public String getExcusa() { return excusa; }
+    public void setExcusa(String excusa) { this.excusa = excusa; }
 }
